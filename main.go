@@ -53,6 +53,7 @@ func main() {
 	v1Router.Get("/healthz", handlers.HandlerReadiness)
 	v1Router.Get("/error", handlers.HandlerErr)
 	v1Router.Post("/users", apiConfig.HandleCreateUser)
+	v1Router.Get("/users", apiConfig.HandleGetUser)
 	router.Mount("/v1", v1Router)
 
 	server := &http.Server{
@@ -62,6 +63,6 @@ func main() {
 
 	log.Printf("Server staring on port %v", port)
 	if err := server.ListenAndServe(); err != nil {
-		log.Fatal("Unable to start server...")
+		log.Fatalf("Unable to start server: %v", err)
 	}
 }
