@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const APIKEY_FORMAT = "ApiKey"
+
 // GetAPIKey extracts an API key from the headers of an HTTP request
 // Example:
 // Authorization: ApiKey {actual apikey}
@@ -20,7 +22,7 @@ func GetAPIKey(headers http.Header) (string, error) {
 		return "", errors.New("Malformed auth header")
 	}
 
-	if vals[0] != "ApiKey" {
+	if vals[0] != APIKEY_FORMAT {
 		return "", errors.New("Malformed first part of auth header")
 	}
 
