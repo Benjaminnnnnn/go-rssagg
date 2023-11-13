@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/benjaminnnnnn/go-review/rssagg/handlers"
 	"github.com/benjaminnnnnn/go-review/rssagg/internal/database"
-	"github.com/benjaminnnnnn/go-review/rssagg/sql/handlers"
+	"github.com/benjaminnnnnn/go-review/rssagg/middlewares"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
@@ -35,8 +36,11 @@ func main() {
 	}
 	defer conn.Close()
 
-	apiConfig := &handlers.UserHandler{
+	apiConfig := &handlers.ApiConfig{
 		DB: database.New(conn),
+	}
+	authMiddleware := &middlewares.AuthMiddleware{
+		ApiConfig: apiConfig,
 	}
 
 	router := chi.NewRouter()
@@ -54,7 +58,7 @@ func main() {
 	v1Router.Get("/healthz", handlers.HandlerReadiness)
 	v1Router.Get("/error", handlers.HandlerErr)
 	v1Router.Post("/users", apiConfig.HandleCreateUser)
-	v1Router.Get("/users", apiConfig.HandleGetUser)
+	v1Router.Get("/users", authMiddleware.MiddlewareAuth(apiConfig.HandleGetUser))
 	router.Mount("/v1", v1Router)
 
 	server := &http.Server{

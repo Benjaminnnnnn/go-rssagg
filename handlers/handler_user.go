@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/benjaminnnnnn/go-review/rssagg/internal/auth"
 	"github.com/benjaminnnnnn/go-review/rssagg/internal/database"
 	"github.com/benjaminnnnnn/go-review/rssagg/models"
 	"github.com/google/uuid"
@@ -22,7 +21,7 @@ type parameters struct {
 
 func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	params := parameters{}
+	params := feedParameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, fmt.Sprintf("Error parsing JSON: %v", err))
@@ -44,18 +43,6 @@ func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request
 	RespondWithJSON(w, http.StatusCreated, models.DBUserToUser(dbUser))
 }
 
-func (apiCfg *ApiConfig) HandleGetUser(w http.ResponseWriter, r *http.Request) {
-	apiKey, err := auth.GetAPIKey(r.Header)
-	if err != nil {
-		RespondWithError(w, http.StatusUnauthorized, fmt.Sprintf("Auth error: %v", err))
-		return
-	}
-
-	user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
-	if err != nil {
-		RespondWithError(w, http.StatusBadRequest, fmt.Sprintf("Couldn't get user: %v", err))
-		return
-	}
-
+func (apiCfg *ApiConfig) HandleGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	RespondWithJSON(w, http.StatusOK, models.DBUserToUser(user))
 }
