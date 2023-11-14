@@ -57,8 +57,13 @@ func main() {
 	v1Router := chi.NewRouter()
 	v1Router.Get("/healthz", handlers.HandlerReadiness)
 	v1Router.Get("/error", handlers.HandlerErr)
+
 	v1Router.Post("/users", apiConfig.HandleCreateUser)
 	v1Router.Get("/users", authMiddleware.MiddlewareAuth(apiConfig.HandleGetUser))
+
+	v1Router.Post("/feeds", authMiddleware.MiddlewareAuth(apiConfig.HandleCreateFeed))
+	v1Router.Get("/feeds", apiConfig.GetFeeds)
+
 	router.Mount("/v1", v1Router)
 
 	server := &http.Server{

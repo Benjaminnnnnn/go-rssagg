@@ -15,16 +15,16 @@ type ApiConfig struct {
 	DB *database.Queries
 }
 
-type parameters struct {
-	Name string `json:"name"`
-}
-
 func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
+	type parameters struct {
+		Name string `json:"name"`
+	}
 	decoder := json.NewDecoder(r.Body)
-	params := feedParameters{}
+	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, fmt.Sprintf("Error parsing JSON: %v", err))
+		return
 	}
 
 	dbUser, err := apiCfg.DB.CreateUser(
@@ -38,6 +38,7 @@ func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request
 
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, fmt.Sprintf("Couldn't create user: %v", err))
+		return
 	}
 
 	RespondWithJSON(w, http.StatusCreated, models.DBUserToUser(dbUser))
