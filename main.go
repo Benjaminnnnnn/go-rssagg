@@ -45,12 +45,12 @@ func main() {
 		log.Fatal("DB_URL is not found in the environment")
 	}
 
-	conn, _ := sql.Open("postgres", dbURL)
-	// conn, err := sql.Open("postgres", dbURL)
-	// if err != nil {
-	// 	log.Fatal("Unable to connect to database")
-	// }
-	// defer conn.Close()
+	// conn, _ := sql.Open("postgres", dbURL)
+	conn, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("Unable to connect to database")
+	}
+	defer conn.Close()
 
 	apiConfig := &handlers.ApiConfig{
 		DB: database.New(conn),
