@@ -1,0 +1,183 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a rss feed api enabling user to subscribe to any rss feed.",
+        "title": "RSS Feed API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Benjamin Zhuang",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/error": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Display an error message",
+                "responses": {
+                    "400": {
+                        "description": "Something went wrong",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/feeds": {
+            "get": {
+                "description": "List all RSS feeds",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "feeds"
+                ],
+                "summary": "List all RSS feeds",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Feed"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't get feeds",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create an RSS feed provided by user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "feeds"
+                ],
+                "summary": "Create an RSS feed",
+                "parameters": [
+                    {
+                        "description": "RSS Feed body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateFeed.parameters"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Feed"
+                        }
+                    },
+                    "400": {
+                        "description": "Couldn't create feed",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/healthz": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Display an error message",
+                "responses": {
+                    "200": {
+                        "description": "Server ready",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.CreateFeed.parameters": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "New York Times - U.S."
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://rss.nytimes.com/services/xml/rss/nyt/US.xml"
+                }
+            }
+        },
+        "handlers.HTTPError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Something went wrong"
+                }
+            }
+        },
+        "models.Feed": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2009-11-10 23:00:00 +0000 UTC"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "New York Times"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2009-11-10 23:00:00 +0000 UTC"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://rss.nytimes.com/services/xml/rss/nyt/US.xml"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "54bd9e94-107c-40a4-91d0-973e0cef143d"
+                }
+            }
+        }
+    }
+}

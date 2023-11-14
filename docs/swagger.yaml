@@ -1,0 +1,121 @@
+basePath: /v1
+definitions:
+  handlers.CreateFeed.parameters:
+    properties:
+      name:
+        example: New York Times - U.S.
+        type: string
+      url:
+        example: https://rss.nytimes.com/services/xml/rss/nyt/US.xml
+        type: string
+    type: object
+  handlers.HTTPError:
+    properties:
+      error:
+        example: Something went wrong
+        type: string
+    type: object
+  models.Feed:
+    properties:
+      created_at:
+        example: 2009-11-10 23:00:00 +0000 UTC
+        type: string
+      id:
+        type: string
+      name:
+        example: New York Times
+        type: string
+      updated_at:
+        example: 2009-11-10 23:00:00 +0000 UTC
+        type: string
+      url:
+        example: https://rss.nytimes.com/services/xml/rss/nyt/US.xml
+        type: string
+      user_id:
+        example: 54bd9e94-107c-40a4-91d0-973e0cef143d
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: Benjamin Zhuang
+    url: http://www.swagger.io/support
+  description: This is a rss feed api enabling user to subscribe to any rss feed.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: RSS Feed API
+  version: "1.0"
+paths:
+  /error:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Display an error message
+  /feeds:
+    get:
+      description: List all RSS feeds
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.Feed'
+            type: array
+        "400":
+          description: Couldn't get feeds
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: List all RSS feeds
+      tags:
+      - feeds
+    post:
+      consumes:
+      - application/json
+      description: Create an RSS feed provided by user
+      parameters:
+      - description: RSS Feed body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateFeed.parameters'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Feed'
+        "400":
+          description: Couldn't create feed
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create an RSS feed
+      tags:
+      - feeds
+  /healthz:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Server ready
+          schema:
+            type: string
+      summary: Display an error message
+swagger: "2.0"

@@ -19,7 +19,7 @@ func (m *AuthMiddleware) MiddlewareAuth(next authedHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		apiKey, err := auth.GetAPIKey(r.Header)
 		if err != nil {
-			handlers.RespondWithError(w, http.StatusUnauthorized, fmt.Sprintf("Auth error: %v", err))
+			handlers.RespondWithError(w, http.StatusUnauthorized, fmt.Sprintf("Require user authentication: %v", err))
 			return
 		}
 

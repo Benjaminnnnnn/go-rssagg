@@ -11,10 +11,21 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary		Create an RSS feed
+// @Description	Create an RSS feed provided by user
+// @Tags		feeds
+// @Accept		json
+// @Produce		json
+// @Param		body	body	handlers.CreateFeed.parameters	true	"RSS Feed body"
+// @Success		201	{object}	models.Feed
+// @Failure		400	{object}	HTTPError		"Incorrect reuqest body"
+// @Failure		400	{object}	HTTPError		"Couldn't create feed"
+// @Security	ApiKeyAuth
+// @Router		/feeds	[post]
 func (apiCfg *ApiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
-		Name string `json:"name"`
-		Url  string `json:"url"`
+		Name string `json:"name" example:"New York Times - U.S."`
+		Url  string `json:"url" example:"https://rss.nytimes.com/services/xml/rss/nyt/US.xml"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -44,6 +55,13 @@ func (apiCfg *ApiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user
 	RespondWithJSON(w, http.StatusCreated, models.DBFeedToFeed(dbFeed))
 }
 
+// @Summary		List all RSS feeds
+// @Description	List all RSS feeds
+// @Tags		feeds
+// @Produce		json
+// @Success		201	{array}		models.Feed
+// @Failure		400	{object}	HTTPError		"Couldn't get feeds"
+// @Router		/feeds	[get]
 func (apiCfg *ApiConfig) GetFeeds(w http.ResponseWriter, r *http.Request) {
 	dbFeeds, err := apiCfg.DB.GetFeeds(r.Context())
 	if err != nil {

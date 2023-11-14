@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -14,16 +15,16 @@ const APIKEY_FORMAT = "ApiKey"
 func GetAPIKey(headers http.Header) (string, error) {
 	val := headers.Get("Authorization")
 	if val == "" {
-		return "", errors.New("No authentication info found")
+		return "", errors.New("Missing header Authorization")
 	}
 
 	vals := strings.Split(val, " ")
 	if len(vals) != 2 {
-		return "", errors.New("Malformed auth header")
+		return "", errors.New(fmt.Sprintf("Malformed authorization header. Expected format: %v %v", APIKEY_FORMAT, "example_key"))
 	}
 
 	if vals[0] != APIKEY_FORMAT {
-		return "", errors.New("Malformed first part of auth header")
+		return "", errors.New(fmt.Sprintf("Malformed first part of authorization header. Expected format: %v %v", APIKEY_FORMAT, "example_key"))
 	}
 
 	return vals[1], nil
