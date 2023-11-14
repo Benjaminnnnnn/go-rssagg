@@ -15,7 +15,7 @@ type ApiConfig struct {
 	DB *database.Queries
 }
 
-func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -44,6 +44,6 @@ func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request
 	RespondWithJSON(w, http.StatusCreated, models.DBUserToUser(dbUser))
 }
 
-func (apiCfg *ApiConfig) HandleGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
+func (apiCfg *ApiConfig) GetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	RespondWithJSON(w, http.StatusOK, models.DBUserToUser(user))
 }
