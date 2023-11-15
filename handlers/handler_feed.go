@@ -17,7 +17,7 @@ import (
 // @Accept		json
 // @Produce		json
 // @Param		body	body	handlers.CreateFeed.parameters	true	"RSS Feed body"
-// @Success		201	{object}	models.Feed
+// @Success		201	{object}	models.Feed{proto.ExampleCreateFeedResponse}
 // @Failure		400	{object}	HTTPError		"Incorrect reuqest body"
 // @Failure		400	{object}	HTTPError		"Couldn't create feed"
 // @Security	ApiKeyAuth
