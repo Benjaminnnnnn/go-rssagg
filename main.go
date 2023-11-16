@@ -91,7 +91,7 @@ func main() {
 
 	log.Printf("Server staring on port %v", port)
 
-	router.Get("/swagger/*", httpSwagger.Handler())
+	router.Get("/docs/*", httpSwagger.Handler())
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Unable to start server: %v", err)
