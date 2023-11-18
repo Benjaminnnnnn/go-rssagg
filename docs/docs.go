@@ -90,6 +90,13 @@ const docTemplate = `{
                 "summary": "Create an RSS feed",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Authorization ApiKey",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "RSS Feed body",
                         "name": "body",
                         "in": "body",
@@ -128,7 +135,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Server ready",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handlers.EmptyResponse"
                         }
                     }
                 }
@@ -148,6 +155,9 @@ const docTemplate = `{
                     "example": "https://rss.nytimes.com/services/xml/rss/nyt/US.xml"
                 }
             }
+        },
+        "handlers.EmptyResponse": {
+            "type": "object"
         },
         "handlers.HTTPError": {
             "type": "object",

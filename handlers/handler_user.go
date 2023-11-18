@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/benjaminnnnnn/go-review/rssagg/internal/database"
 	"github.com/benjaminnnnnn/go-review/rssagg/models"
-	"github.com/google/uuid"
 )
 
 type ApiConfig struct {
@@ -35,7 +36,6 @@ func (apiCfg *ApiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 			Name:      params.Name,
 		},
 	)
-
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, fmt.Sprintf("Couldn't create user: %v", err))
 		return
@@ -46,4 +46,26 @@ func (apiCfg *ApiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func (apiCfg *ApiConfig) GetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	RespondWithJSON(w, http.StatusOK, models.DBUserToUser(user))
+}
+
+func (apiCfg *ApiConfig) GetPostsForUser(
+	w http.ResponseWriter,
+	r *http.Request,
+	user database.User,
+) {
+	dbPosts,
+		err := apiCfg.DB.GetPostsForUser(
+		r.Context(),
+		database.GetPostsForUserParams{UserID: user.ID, Limit: 10},
+	)
+	if err != nil {
+		RespondWithError(
+			w,
+			http.StatusBadRequest,
+			fmt.Sprintf("Unable to get posts for user %v", err),
+		)
+		return
+	}
+
+	RespondWithJSON(w, http.StatusOK, models.DBPostsToPosts(dbPosts))
 }

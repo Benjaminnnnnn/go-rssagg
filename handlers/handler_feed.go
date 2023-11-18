@@ -16,6 +16,7 @@ import (
 // @Tags		feeds
 // @Accept		json
 // @Produce		json
+// @Param		Authorization	header	string 		true	"ApiKey {api_key}"
 // @Param		body	body	handlers.CreateFeed.parameters	true	"RSS Feed body"
 // @Success		201	{object}	models.Feed{proto.ExampleCreateFeedResponse}
 // @Failure		400	{object}	HTTPError		"Incorrect reuqest body"

@@ -9,6 +9,8 @@ definitions:
         example: https://rss.nytimes.com/services/xml/rss/nyt/US.xml
         type: string
     type: object
+  handlers.EmptyResponse:
+    type: object
   handlers.HTTPError:
     properties:
       error:
@@ -84,6 +86,11 @@ paths:
       - application/json
       description: Create an RSS feed provided by user
       parameters:
+      - description: Authorization ApiKey
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: RSS Feed body
         in: body
         name: body
@@ -116,6 +123,6 @@ paths:
         "200":
           description: Server ready
           schema:
-            type: string
+            $ref: '#/definitions/handlers.EmptyResponse'
       summary: Display an error message
 swagger: "2.0"
